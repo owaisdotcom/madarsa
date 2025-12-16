@@ -5,7 +5,6 @@ import Navbar from './components/Layout/Navbar';
 import ProtectedRoute from './components/Layout/ProtectedRoute';
 import PublicRoute from './components/Layout/PublicRoute';
 import Login from './components/Auth/Login';
-import Register from './components/Auth/Register';
 import Dashboard from './pages/Dashboard';
 import Students from './pages/Students';
 import Fees from './pages/Fees';
@@ -28,11 +27,7 @@ function App() {
             />
             <Route
               path="/register"
-              element={
-                <PublicRoute>
-                  <Register />
-                </PublicRoute>
-              }
+              element={<Navigate to="/login" replace />}
             />
             <Route
               path="/"

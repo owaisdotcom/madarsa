@@ -55,16 +55,26 @@ const PendingReminders = () => {
         month: now.getMonth() + 1,
         year: now.getFullYear()
       });
-      if (response.data.success) {
-        setGroupLink(response.data.data.link);
-        window.open(response.data.data.link, '_blank');
-        toast.success('Opened WhatsApp group reminder link!');
+      
+      if (response.data && response.data.success) {
+        const link = response.data.data?.link;
+        if (link) {
+          setGroupLink(link);
+          window.open(link, '_blank');
+          toast.success('Opened WhatsApp group reminder link!');
+        } else {
+          toast.error('Link not found in response');
+          console.error('Response data:', response.data);
+        }
       } else {
-        toast.error(response.data.error || 'Failed to generate group reminder link');
+        const errorMsg = response.data?.error || response.data?.data?.error || 'Failed to generate group reminder link';
+        toast.error(errorMsg);
+        console.error('Error response:', response.data);
       }
     } catch (error) {
-      toast.error('Failed to generate group reminder link');
-      console.error(error);
+      const errorMsg = error.response?.data?.error || error.message || 'Failed to generate group reminder link';
+      toast.error(errorMsg);
+      console.error('Error details:', error);
     } finally {
       setLoadingGroupLink(false);
     }

@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-// const API_URL = 'http://localhost:5000/api';
-const API_URL = 'https://madarsa-api.vercel.app/api';
+const API_URL = 'http://localhost:5000/api';
+// const API_URL = 'https://madarsa-api.vercel.app/api';
 
 const api = axios.create({
   baseURL: API_URL,
@@ -43,6 +43,8 @@ export const studentsAPI = {
   create: (data) => api.post('/students', data),
   update: (id, data) => api.put(`/students/${id}`, data),
   delete: (id) => api.delete(`/students/${id}`),
+  activate: (id) => api.patch(`/students/${id}/activate`),
+  deactivate: (id) => api.patch(`/students/${id}/deactivate`),
 };
 
 // Fees API
@@ -51,6 +53,8 @@ export const feesAPI = {
   getById: (id) => api.get(`/fees/${id}`),
   getByStudent: (studentId) => api.get(`/fees/student/${studentId}`),
   create: (data) => api.post('/fees', data),
+  update: (id, data) => api.put(`/fees/${id}`, data),
+  delete: (id) => api.delete(`/fees/${id}`),
   getMonthly: (params) => api.get('/fees/monthly', { params }),
 };
 

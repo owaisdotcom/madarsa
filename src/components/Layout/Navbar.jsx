@@ -21,23 +21,23 @@ const Navbar = () => {
 
   return (
     <nav className="bg-white shadow-soft border-b border-gray-100">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
+      <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8">
+        <div className="flex justify-between h-12 md:h-16">
           <div className="flex">
-            <div className="flex-shrink-0 flex items-center space-x-3">
+            <div className="flex-shrink-0 flex items-center space-x-2 md:space-x-3">
               <img 
                 src="/logo.jpg" 
                 alt="Madarsa Logo" 
-                className="h-10 w-10 rounded-full object-cover shadow-md border-2 border-white"
+                className="h-8 w-8 md:h-10 md:w-10 rounded-full object-cover shadow-md border-2 border-white"
               />
-              <h1 className="text-xl font-bold bg-gradient-to-r from-primary-600 to-primary-800 bg-clip-text text-transparent hidden sm:block">
+              <h1 className="text-base md:text-xl font-bold bg-gradient-to-r from-primary-600 to-primary-800 bg-clip-text text-transparent hidden sm:block">
                 Madarsa Management
               </h1>
             </div>
-            <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
+            <div className="hidden sm:ml-6 sm:flex sm:space-x-6 md:space-x-8">
               <Link
                 to="/"
-                className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
+                className={`inline-flex items-center px-1 pt-1 border-b-2 text-xs md:text-sm font-medium ${
                   isActive('/')
                     ? 'border-primary-500 text-gray-900'
                     : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
@@ -47,7 +47,7 @@ const Navbar = () => {
               </Link>
               <Link
                 to="/students"
-                className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
+                className={`inline-flex items-center px-1 pt-1 border-b-2 text-xs md:text-sm font-medium ${
                   isActive('/students')
                     ? 'border-primary-500 text-gray-900'
                     : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
@@ -57,7 +57,7 @@ const Navbar = () => {
               </Link>
               <Link
                 to="/fees"
-                className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
+                className={`inline-flex items-center px-1 pt-1 border-b-2 text-xs md:text-sm font-medium ${
                   isActive('/fees')
                     ? 'border-primary-500 text-gray-900'
                     : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
@@ -67,7 +67,7 @@ const Navbar = () => {
               </Link>
               <Link
                 to="/announcements"
-                className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
+                className={`inline-flex items-center px-1 pt-1 border-b-2 text-xs md:text-sm font-medium ${
                   isActive('/announcements')
                     ? 'border-primary-500 text-gray-900'
                     : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
@@ -80,9 +80,9 @@ const Navbar = () => {
           <div className="hidden sm:flex sm:items-center">
             <button
               onClick={handleLogout}
-              className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors duration-200 flex items-center space-x-2"
+              className="px-3 md:px-4 py-1.5 md:py-2 text-xs md:text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors duration-200 flex items-center space-x-1.5 md:space-x-2"
             >
-              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="h-3.5 w-3.5 md:h-4 md:w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
               </svg>
               <span>Logout</span>
@@ -91,15 +91,15 @@ const Navbar = () => {
           <div className="sm:hidden flex items-center">
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary-500"
+              className="inline-flex items-center justify-center p-1.5 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary-500"
             >
               <span className="sr-only">Open main menu</span>
               {mobileMenuOpen ? (
-                <svg className="block h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="block h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 </svg>
               ) : (
-                <svg className="block h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="block h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
               )}
@@ -111,11 +111,11 @@ const Navbar = () => {
       {/* Mobile menu */}
       {mobileMenuOpen && (
         <div className="sm:hidden">
-          <div className="pt-2 pb-3 space-y-1">
+          <div className="pt-1 pb-2 space-y-0.5">
             <Link
               to="/"
               onClick={() => setMobileMenuOpen(false)}
-              className={`block pl-3 pr-4 py-2 border-l-4 text-base font-medium ${
+              className={`block pl-2 pr-3 py-1.5 border-l-2 md:border-l-4 text-sm font-medium ${
                 isActive('/')
                   ? 'bg-primary-50 border-primary-500 text-primary-700'
                   : 'border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700'
@@ -126,7 +126,7 @@ const Navbar = () => {
             <Link
               to="/students"
               onClick={() => setMobileMenuOpen(false)}
-              className={`block pl-3 pr-4 py-2 border-l-4 text-base font-medium ${
+              className={`block pl-2 pr-3 py-1.5 border-l-2 md:border-l-4 text-sm font-medium ${
                 isActive('/students')
                   ? 'bg-primary-50 border-primary-500 text-primary-700'
                   : 'border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700'
@@ -137,7 +137,7 @@ const Navbar = () => {
             <Link
               to="/fees"
               onClick={() => setMobileMenuOpen(false)}
-              className={`block pl-3 pr-4 py-2 border-l-4 text-base font-medium ${
+              className={`block pl-2 pr-3 py-1.5 border-l-2 md:border-l-4 text-sm font-medium ${
                 isActive('/fees')
                   ? 'bg-primary-50 border-primary-500 text-primary-700'
                   : 'border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700'
@@ -148,7 +148,7 @@ const Navbar = () => {
             <Link
               to="/announcements"
               onClick={() => setMobileMenuOpen(false)}
-              className={`block pl-3 pr-4 py-2 border-l-4 text-base font-medium ${
+              className={`block pl-2 pr-3 py-1.5 border-l-2 md:border-l-4 text-sm font-medium ${
                 isActive('/announcements')
                   ? 'bg-primary-50 border-primary-500 text-primary-700'
                   : 'border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700'
@@ -161,7 +161,7 @@ const Navbar = () => {
                 setMobileMenuOpen(false);
                 handleLogout();
               }}
-              className="block w-full text-left pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700"
+              className="block w-full text-left pl-2 pr-3 py-1.5 border-l-2 md:border-l-4 border-transparent text-sm font-medium text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700"
             >
               Logout
             </button>

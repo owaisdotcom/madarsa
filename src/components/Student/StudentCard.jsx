@@ -44,7 +44,7 @@ const StudentCard = ({ student, onUpdate, onDelete }) => {
   };
 
   const handleDelete = async () => {
-    if (!window.confirm('Are you sure you want to delete this student?')) {
+    if (!window.confirm('Are you sure you want to permanently delete this student? This action cannot be undone.')) {
       return;
     }
 
@@ -58,9 +58,35 @@ const StudentCard = ({ student, onUpdate, onDelete }) => {
     }
   };
 
+  const handleActivate = async () => {
+    try {
+      await studentsAPI.activate(student._id);
+      toast.success('Student activated successfully!');
+      if (onUpdate) onUpdate();
+    } catch (error) {
+      const message = error.response?.data?.error || 'Failed to activate student';
+      toast.error(message);
+    }
+  };
+
+  const handleDeactivate = async () => {
+    if (!window.confirm('Are you sure you want to deactivate this student?')) {
+      return;
+    }
+
+    try {
+      await studentsAPI.deactivate(student._id);
+      toast.success('Student deactivated successfully!');
+      if (onUpdate) onUpdate();
+    } catch (error) {
+      const message = error.response?.data?.error || 'Failed to deactivate student';
+      toast.error(message);
+    }
+  };
+
   if (isEditing) {
     return (
-      <div className="bg-white rounded-lg shadow p-6">
+      <div className="bg-white rounded-lg shadow p-4 md:p-6">
         <form onSubmit={handleUpdate} className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
@@ -71,7 +97,7 @@ const StudentCard = ({ student, onUpdate, onDelete }) => {
                 required
                 value={formData.fullName}
                 onChange={handleChange}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm px-3 py-2 border"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 text-sm px-3 py-2 border"
               />
             </div>
             <div>
@@ -82,7 +108,7 @@ const StudentCard = ({ student, onUpdate, onDelete }) => {
                 required
                 value={formData.phone}
                 onChange={handleChange}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm px-3 py-2 border"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 text-sm px-3 py-2 border"
               />
             </div>
             <div>
@@ -93,7 +119,7 @@ const StudentCard = ({ student, onUpdate, onDelete }) => {
                 required
                 value={formData.flatName}
                 onChange={handleChange}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm px-3 py-2 border"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 text-sm px-3 py-2 border"
               />
             </div>
             <div>
@@ -104,7 +130,7 @@ const StudentCard = ({ student, onUpdate, onDelete }) => {
                 required
                 value={formData.flatNo}
                 onChange={handleChange}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm px-3 py-2 border"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 text-sm px-3 py-2 border"
               />
             </div>
             <div>
@@ -117,7 +143,7 @@ const StudentCard = ({ student, onUpdate, onDelete }) => {
                 step="0.01"
                 value={formData.monthlyFee}
                 onChange={handleChange}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm px-3 py-2 border"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 text-sm px-3 py-2 border"
               />
             </div>
             <div>
@@ -130,7 +156,7 @@ const StudentCard = ({ student, onUpdate, onDelete }) => {
                 max="31"
                 value={formData.feeDueDate}
                 onChange={handleChange}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm px-3 py-2 border"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 text-sm px-3 py-2 border"
               />
             </div>
           </div>
@@ -138,14 +164,14 @@ const StudentCard = ({ student, onUpdate, onDelete }) => {
             <button
               type="button"
               onClick={() => setIsEditing(false)}
-              className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+              className="px-4 py-2 border border-gray-300 rounded-md text-sm text-gray-700 hover:bg-gray-50"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 disabled:opacity-50"
+              className="px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 disabled:opacity-50 text-sm"
             >
               {loading ? 'Saving...' : 'Save'}
             </button>
@@ -156,49 +182,70 @@ const StudentCard = ({ student, onUpdate, onDelete }) => {
   }
 
   return (
-    <div className="bg-white rounded-xl shadow-soft p-6 border border-gray-100 hover:shadow-soft-lg transition-all duration-300 hover:-translate-y-1">
-      <div className="flex justify-between items-start mb-4">
-        <div className="flex items-center space-x-3 flex-1">
-          <div className="h-12 w-12 rounded-full bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center flex-shrink-0 shadow-md">
-            <span className="text-lg font-bold text-white">
+    <div className="bg-white rounded-lg md:rounded-xl shadow-soft p-4 md:p-6 border border-gray-100 hover:shadow-soft-lg transition-all duration-300">
+      <div className="flex justify-between items-start mb-3 md:mb-4">
+        <div className="flex items-center space-x-2 md:space-x-3 flex-1">
+          <div className="h-10 w-10 md:h-12 md:w-12 rounded-full bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center flex-shrink-0 shadow-md">
+            <span className="text-sm md:text-lg font-bold text-white">
               {student.fullName.charAt(0)}
             </span>
           </div>
           <div className="flex-1 min-w-0">
-            <h3 className="text-lg font-bold text-gray-900 truncate">{student.fullName}</h3>
-            <div className="flex items-center space-x-1 mt-1">
-              <svg className="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <h3 className="text-sm md:text-lg font-bold text-gray-900 truncate">{student.fullName}</h3>
+            <div className="flex items-center space-x-1 mt-0.5 md:mt-1">
+              <svg className="h-3.5 w-3.5 md:h-4 md:w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
               </svg>
-              <p className="text-sm text-gray-600 truncate">{student.phone}</p>
+              <p className="text-xs md:text-sm text-gray-600 truncate">{student.phone}</p>
             </div>
           </div>
         </div>
-        <div className="flex space-x-2 ml-4">
+        <div className="flex space-x-1 md:space-x-2 ml-2 md:ml-4">
           <button
             onClick={() => setIsEditing(true)}
-            className="p-2 text-primary-600 hover:bg-primary-50 rounded-lg transition-colors duration-200"
+            className="p-1.5 md:p-2 text-primary-600 hover:bg-primary-50 rounded-lg transition-colors duration-200"
             title="Edit"
           >
-            <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="h-4 w-4 md:h-5 md:w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
             </svg>
           </button>
+          {student.isActive ? (
+            <button
+              onClick={handleDeactivate}
+              className="p-1.5 md:p-2 text-yellow-600 hover:bg-yellow-50 rounded-lg transition-colors duration-200"
+              title="Deactivate"
+            >
+              <svg className="h-4 w-4 md:h-5 md:w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+              </svg>
+            </button>
+          ) : (
+            <button
+              onClick={handleActivate}
+              className="p-1.5 md:p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors duration-200"
+              title="Activate"
+            >
+              <svg className="h-4 w-4 md:h-5 md:w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </button>
+          )}
           <button
             onClick={handleDelete}
-            className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors duration-200"
-            title="Delete"
+            className="p-1.5 md:p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors duration-200"
+            title="Delete Permanently"
           >
-            <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="h-4 w-4 md:h-5 md:w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
             </svg>
           </button>
         </div>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4 pt-4 border-t border-gray-100">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4 mt-3 md:mt-4 pt-3 md:pt-4 border-t border-gray-100">
         <div className="flex items-center space-x-2">
-          <div className="h-8 w-8 rounded-lg bg-blue-100 flex items-center justify-center">
-            <svg className="h-4 w-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="h-7 w-7 md:h-8 md:w-8 rounded-lg bg-blue-100 flex items-center justify-center">
+            <svg className="h-3.5 w-3.5 md:h-4 md:w-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
             </svg>
           </div>
@@ -208,8 +255,8 @@ const StudentCard = ({ student, onUpdate, onDelete }) => {
           </div>
         </div>
         <div className="flex items-center space-x-2">
-          <div className="h-8 w-8 rounded-lg bg-green-100 flex items-center justify-center">
-            <svg className="h-4 w-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="h-7 w-7 md:h-8 md:w-8 rounded-lg bg-green-100 flex items-center justify-center">
+            <svg className="h-3.5 w-3.5 md:h-4 md:w-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </div>
@@ -219,8 +266,8 @@ const StudentCard = ({ student, onUpdate, onDelete }) => {
           </div>
         </div>
         <div className="flex items-center space-x-2">
-          <div className="h-8 w-8 rounded-lg bg-purple-100 flex items-center justify-center">
-            <svg className="h-4 w-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="h-7 w-7 md:h-8 md:w-8 rounded-lg bg-purple-100 flex items-center justify-center">
+            <svg className="h-3.5 w-3.5 md:h-4 md:w-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
           </div>
@@ -231,8 +278,8 @@ const StudentCard = ({ student, onUpdate, onDelete }) => {
         </div>
       </div>
       {!student.isActive && (
-        <div className="mt-4 pt-4 border-t border-gray-100">
-          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-700">
+        <div className="mt-3 md:mt-4 pt-3 md:pt-4 border-t border-gray-100">
+          <span className="inline-flex items-center px-2.5 py-1 md:px-3 md:py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-700">
             <svg className="h-3 w-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
             </svg>

@@ -49,16 +49,6 @@ export const AuthProvider = ({ children }) => {
     return { success: false, error: response.data.error };
   };
 
-  const register = async (username, email, password) => {
-    const response = await authAPI.register({ username, email, password });
-    if (response.data.success) {
-      setToken(response.data.data.token);
-      setUser(response.data.data.user);
-      return { success: true };
-    }
-    return { success: false, error: response.data.error };
-  };
-
   const logout = () => {
     localStorage.removeItem('token');
     setToken(null);
@@ -69,7 +59,6 @@ export const AuthProvider = ({ children }) => {
     user,
     loading,
     login,
-    register,
     logout,
     isAuthenticated: !!user
   };
